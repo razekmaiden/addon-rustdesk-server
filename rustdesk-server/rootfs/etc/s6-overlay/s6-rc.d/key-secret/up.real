@@ -2,83 +2,83 @@
 # shellcheck shell=bash
 # ==============================================================================
 # Home Assistant Add-on: RustDesk-Server
-# Runs Key-secret
+# Ejecuta la verificación de claves
 # ==============================================================================
-bashio::log.info "Verifying keypair configuration"
+bashio::log.info "Verificando configuración del par de claves"
 
 if [ ! -d /config ] ; then
   mkdir /config
 fi
 
-# ENV variables
+# Variables de entorno
 if [ ! -f /config/id_ed25519 ] && ! bashio::config.is_empty 'private_key'; then
-    bashio::log.info "private_key is not already configured but is provided"
+    bashio::log.info "La clave privada no está configurada pero se proporcionó una"
     private_key=$(bashio::config 'private_key')
     echo -n "$private_key" > /config/id_ed25519
-    bashio::log.info "Private key created from config variable"
+    bashio::log.info "Clave privada creada desde la variable de configuración"
 fi
 
 if [ ! -f /config/id_ed25519.pub ] && ! bashio::config.is_empty 'public_key'; then
-    bashio::log.info "public_key is not already configured but is provided"
+    bashio::log.info "La clave pública no está configurada pero se proporcionó una"
     public_key=$(bashio::config 'public_key')
     echo -n "$public_key" > /config/id_ed25519.pub
-    bashio::log.info "Public key created from config variable"
+    bashio::log.info "Clave pública creada desde la variable de configuración"
 fi
 
-# check if the keys provided and present in config directory are identical
+# Verificar si las claves proporcionadas y las presentes en el directorio de configuración son idénticas
 if [ -f /config/id_ed25519 ] && ! bashio::config.is_empty 'private_key'; then
     present_private_key="$(cat '/config/id_ed25519')"
     if ! bashio::config.equals 'private_key' "$present_private_key"; then
-        bashio::log.fatal "Provided Private key and present Private key in the config folder are not identical"
-        bashio::log.fatal "Please only provide one Private key"
+        bashio::log.fatal "La clave privada proporcionada y la presente en la carpeta de configuración no son idénticas"
+        bashio::log.fatal "Por favor, proporcione solo una clave privada"
         /run/s6/basedir/bin/halt
         exit 1
     else
-        bashio::log.debug "GOOD! Provided Private key and present Private key in the config folder are the same"
+        bashio::log.debug "¡CORRECTO! La clave privada proporcionada y la presente en la carpeta de configuración son iguales"
     fi
 fi
 
 if [ -f /config/id_ed25519.pub ] && ! bashio::config.is_empty 'public_key'; then
     present_public_key="$(cat '/config/id_ed25519.pub')"
     if ! bashio::config.equals 'public_key' "$present_public_key"; then
-        bashio::log.fatal "Provided Public key and present Public key in the config folder are not identical"
-        bashio::log.fatal "Please only provide one Public key"
+        bashio::log.fatal "La clave pública proporcionada y la presente en la carpeta de configuración no son idénticas"
+        bashio::log.fatal "Por favor, proporcione solo una clave pública"
         /run/s6/basedir/bin/halt
         exit 1
     else
-        bashio::log.debug "GOOD! Provided Public key and present Public key in the config folder are the same"
+        bashio::log.debug "¡CORRECTO! La clave pública proporcionada y la presente en la carpeta de configuración son iguales"
     fi
 fi
 
-# check if both keys provided
+# Verificar si se proporcionaron ambas claves
 if [ -f /config/id_ed25519.pub ] && [ ! -f /config/id_ed25519 ]; then
-    bashio::log.fatal "Private key missing."
-    bashio::log.fatal "You must provide BOTH the private and the public key."
+    bashio::log.fatal "Falta la clave privada."
+    bashio::log.fatal "Debe proporcionar AMBAS claves: la privada y la pública."
     /run/s6/basedir/bin/halt
     exit 1
 fi
 
 if [ ! -f /config/id_ed25519.pub ] && [ -f /config/id_ed25519 ]; then
-    bashio::log.fatal "Public key missing."
-    bashio::log.fatal "You must provide BOTH the private and the public key."
+    bashio::log.fatal "Falta la clave pública."
+    bashio::log.fatal "Debe proporcionar AMBAS claves: la privada y la pública."
     /run/s6/basedir/bin/halt
     exit 1
 fi
 
-# here we have either no keys or both
+# Aquí tenemos ninguna clave o ambas
 
-# if we have both keys, we fix permissions and ownership
-# and check for keypair validation
+# Si tenemos ambas claves, corregimos permisos y propietario
+# y verificamos la validez del par de claves
 if [ -f /config/id_ed25519.pub ] && [ -f /config/id_ed25519 ] ; then
   chmod 0600 /config/id_ed25519.pub /config/id_ed25519
   chown root:root /config/id_ed25519.pub /config/id_ed25519
   /opt/rustdesk-server/rustdesk-utils validatekeypair "$(cat /config/id_ed25519.pub)" "$(cat /config/id_ed25519)" || {
-    bashio::log.fatal "Key pair not valid"
+    bashio::log.fatal "Par de claves no válido"
     /run/s6/basedir/bin/halt
     exit 1
   }
 fi
 
-# if we have no keypair, hbbs will generate one
+# Si no tenemos par de claves, hbbs generará uno automáticamente
 
-bashio::log.info "Keypair are correctly configured"
+bashio::log.info "El par de claves está configurado correctamente"

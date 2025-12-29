@@ -1,8 +1,8 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# s6-overlay docs: https://github.com/just-containers/s6-overlay
-# Take down the S6 supervision tree when HBBR fails
+# Documentación s6-overlay: https://github.com/just-containers/s6-overlay
+# Detiene el árbol de supervisión S6 cuando HBBR falla
 # ==============================================================================
 declare exit_code
 readonly exit_code_container=$(</run/s6-linux-init-container-results/exitcode)
@@ -11,8 +11,8 @@ readonly exit_code_signal="${2}"
 readonly service="hbbr"
 
 bashio::log.info \
-  "Service ${service} exited with code ${exit_code_service}" \
-  "(by signal ${exit_code_signal})"
+  "El servicio ${service} terminó con código ${exit_code_service}" \
+  "(por señal ${exit_code_signal})"
 
 if [[ "${exit_code_service}" -eq 256 ]]; then
   if [[ "${exit_code_container}" -eq 0 ]]; then
