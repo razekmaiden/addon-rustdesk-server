@@ -6,38 +6,39 @@
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports i386 Architecture][i386-shield]
 
-[RustDesk-Server][rustdesk-server] permet de partager des fichiers avec d'autres de manière
-simple.
+[RustDesk-Server][rustdesk-server] permite compartir archivos con otros de manera
+sencilla.
 
-[![Open your Home Assistant instance and show the add add-on repository dialog
-with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
-[![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
+[![Abre tu instancia de Home Assistant y muestra el diálogo de añadir repositorio de add-ons
+con una URL específica pre-llenada.][add-repo-shield]][add-repo]
+[![Abre tu instancia de Home Assistant y muestra el panel de un add-on de Supervisor.][add-addon-shield]][add-addon]
 
-## About
+## Acerca de
 
-Cet add-on vous permet d'auto-hébergez votre propre serveur RustDesk
-sur votre HomeAssistant sur RaspBerry Pi 4.
-Si vous utilisez RustDesk, vous devriez avoir votre propre server RustDesk.
-Les serveurs publics Rustdesk sont destinés à des fins de test et de recherche
-et ne sont pas équipés pour gérer de grandes quantités de trafic.
-Cela signifie que le temps nécessaire pour établir une connexion
-via les serveurs publics peut varier considérablement et parfois même échouer
-si le serveur est surchargé.
-De plus, si la perforation échoue un jour et que la connexion est acheminée
-via le serveur relais public... certains jours elle peut être
-extrêmement rapide... d'autres moins.
+Este add-on te permite auto-hospedar tu propio servidor RustDesk
+en tu HomeAssistant, compatible con Raspberry Pi 4 y otras arquitecturas soportadas.
 
-## Support
+Si utilizas RustDesk, deberías tener tu propio servidor RustDesk.
+Los servidores públicos de RustDesk están destinados a fines de prueba e investigación
+y no están equipados para manejar grandes cantidades de tráfico.
+Esto significa que el tiempo necesario para establecer una conexión
+a través de los servidores públicos puede variar considerablemente y a veces incluso fallar
+si el servidor está sobrecargado.
+Además, si la perforación de puertos (hole punching) falla y la conexión se enruta
+a través del servidor de retransmisión público... algunos días puede ser
+extremadamente rápida... otros no tanto.
 
-Je ne suis pas dévellopeur, n'ai aucune formation de code, je suis simplement
-autodidact.
-Si vous avez une question concernant HA et ses add-ons vous pouvez consulter:
+## Soporte
 
-- [Le Forum communautaire francophone][hacf] de HomeAssistant
-- [Le Forum communautaire anglophone][forum] de HomeAssistant.
-- [Le serveur Discord][discord-ha] de HomeAssistant.
+No soy desarrollador ni tengo formación en programación, soy simplemente
+autodidacta.
+Si tienes alguna pregunta sobre HA y sus add-ons puedes consultar:
 
-## License
+- [El Foro comunitario francófono][hacf] de HomeAssistant
+- [El Foro comunitario anglófono][forum] de HomeAssistant.
+- [El servidor Discord][discord-ha] de HomeAssistant.
+
+## Licencia
 
 MIT License
 
