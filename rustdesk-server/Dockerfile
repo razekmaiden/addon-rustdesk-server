@@ -8,7 +8,7 @@ ARG BUILD_ARCH
 ARG RUSTDESK_SERVER_VERSION=1.1.14
 
 # Add Rustdesk-Server
-RUN set -eux \
+RUN set -eux; \
     apk update; \
     \
     apk add --no-cache --virtual .build-deps \

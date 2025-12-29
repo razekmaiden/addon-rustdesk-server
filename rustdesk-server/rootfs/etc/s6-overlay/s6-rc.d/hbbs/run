@@ -2,13 +2,13 @@
 # shellcheck shell=bash
 # ==============================================================================
 # Home Assistant Add-on: RustDesk-Server
-# Runs hbbs
+# Ejecuta hbbs (servidor de señalización)
 # ==============================================================================
 
-#Check if RELAY ENV is defined
+# Verificar si la variable de entorno RELAY está definida
 if bashio::config.exists 'relay'; then
     RELAY=$(bashio::config 'relay')
-    bashio::log.info "Relay for hbbs set to $RELAY"
+    bashio::log.info "Relay para hbbs configurado en $RELAY"
 fi
 
 
@@ -19,4 +19,4 @@ PARAMS=
 
 
 bashio::log.info $(/opt/rustdesk-server/hbbs --version)
-/opt/rustdesk-server/hbbs -r $RELAY $PARAMS
+/opt/rustdesk-server/hbbs ${RELAY:+-r "$RELAY"} $PARAMS
