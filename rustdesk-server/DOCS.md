@@ -1,73 +1,92 @@
-# Home Assistant Add-on: RustDesk-server
+# Home Assistant Add-on: RustDesk-Server
 
-## About
+## Acerca de
 
-Cet add-on vous permettra d'auto-hébergez votre propre serveur [RustDesk][rustdesk] sur votre
-HomeAssistant sur RaspBerry Pi 4.
+Este add-on te permite auto-hospedar tu propio servidor [RustDesk][rustdesk] en tu HomeAssistant, compatible con Raspberry Pi 4 y otras arquitecturas soportadas.
 
-Si vous utilisez RustDesk, vous devriez avoir votre propre [server RustDesk][serveur_rustdesk].\
-Les serveurs publics Rustdesk sont destinés à des fins de test et de recherche et ne sont pas équipés pour gérer de grandes quantités de trafic.\
-Cela signifie que le temps nécessaire pour établir une connexion via les serveurs publics peut varier considérablement et parfois même échouer si le serveur est surchargé.\
-De plus, si la perforation échoue un jour et que la connexion est acheminée via le serveur relais public... certains jours elle peut être extrêmement rapide... d'autres moins.
+Si utilizas RustDesk, deberías tener tu propio [servidor RustDesk][servidor_rustdesk]. Los servidores públicos de RustDesk están destinados a fines de prueba e investigación y no están equipados para manejar grandes cantidades de tráfico. Esto significa que el tiempo necesario para establecer una conexión a través de los servidores públicos puede variar considerablemente y a veces incluso fallar si el servidor está sobrecargado. Además, si la perforación de puertos (hole punching) falla y la conexión se enruta a través del servidor de retransmisión público, algunos días puede ser extremadamente rápida y otros no tanto.
 
-##### _This add-on will allow you to self-host your own [RustDesk][rustdesk] server on your HomeAssistant on RaspBerry Pi 4. If you are using RustDesk you should have your own [RustDesk Server][serveur_rustdesk]. The public rustdesk servers are meant for testing and research purposes and are not equipped to handle large amounts of traffic. This means that the amount of time it takes to establish a connection through the public servers can vary drastically and sometimes even fail if the server is overloaded. Also, if hole punching ever does fail, and the connection is routed through the public Relay Server.... some days it might be blazing fast... others not so much._
+## Instalación
 
-## Installation
+Primero, añade el repositorio al store de add-ons de Home Assistant (`https://github.com/casse-boubou/hassio-addons`):
 
-D'habord ajoutez le repertoire à l'add-on store de HomeAssistant (`https://github.com/casse-boubou/hassio-addons`):
+[![Abre tu instancia de Home Assistant y muestra el diálogo de añadir repositorio de add-ons
+con una URL específica pre-llenada.][add-repo-shield]][add-repo]
 
-[![Open your Home Assistant instance and show the add add-on repository dialog
-with a specific repository URL pre-filled.][add-repo-shield]][add-repo]
+Luego busca RustDesk-server en el store y haz clic en instalar:
 
-Ensuite recherchez RustDesk-server dans le store et cliquez sur installer:
+[![Abre tu instancia de Home Assistant y muestra el panel de un add-on de Supervisor.][add-addon-shield]][add-addon]
 
-[![Open your Home Assistant instance and show the dashboard of a Supervisor add-on.][add-addon-shield]][add-addon]
+## Arquitecturas Soportadas
 
-## Configuration
+Este add-on soporta las siguientes arquitecturas:
+- **aarch64** (ARM 64-bit, Raspberry Pi 4, etc.)
+- **i386** (Intel/AMD 32-bit)
 
-Example add-on configuration:
+## Configuración
+
+Ejemplo de configuración del add-on:
 
 ```yaml
 private_key: >-
   pmuglkSVWTD3kAw+H9i1WlWWgMFcvkCimlh5W6Ex7/JuHLWRYYIqOUTljEqo9Aea2DI9BQayTCAN89Y4dI8OIw==
 public_key: bhy1kWGCKjlE5YutbPQHmtgyPQUGsklWDfPWOHSPDiM=
-relay: mondomaine.duckdns.org
+relay: midominio.duckdns.org
 ```
 
-**Note**: _Ceci n'est qu'un exemple, ne le copier-coller pas ! Crée le votre!_
+**Nota**: _¡Este es solo un ejemplo, no lo copies y pegues! ¡Crea el tuyo propio!_
 
-### Option: `private_key` (optional)
+### Opción: `private_key` (opcional)
 
-Partie privée de la paire de clés. Si défini, force l'utilisation d'une clé spécifique, s'il est défini sur "\_", force l'utilisation de n'importe quelle clé.
+Parte privada del par de claves. Si se define, fuerza el uso de una clave específica. Si se establece como `_`, fuerza el uso de cualquier clave.
 
-##### _Private part of the key pair. If set force the use of a specific key, if set to "\_" force the use of any key_
+### Opción: `public_key` (opcional)
 
-### Option: `public_key` (optional)
+Parte pública del par de claves. Si se define, fuerza el uso de una clave específica. Si se establece como `_`, fuerza el uso de cualquier clave.
 
-Partie public de la paire de clés. Si défini, force l'utilisation d'une clé spécifique, s'il est défini sur "\_", force l'utilisation de n'importe quelle clé.
+### Opción: `relay` (opcional)
 
-##### _Public part of the key pair. If set force the use of a specific key, if set to "\_" force the use of any key_
+Este parámetro es la dirección IP (o nombre DNS) del servidor que ejecuta hbbr (generalmente este contenedor). El parámetro opcional `puerto` debe usarse si utilizas un puerto diferente al 21117 para hbbr. Ejemplo: `rustdesk.ejemplo.com:21117`
 
-### Option: `relay` (optional)
+## Puertos de Red
 
-Ce paramètre est l'adresse IP (ou le nom DNS) du serveur exécutant hbbr (généralement ce conteneur). Le paramètre facultatif `port` doit être utilisé si vous utilisez un port différent de 21117 pour hbbr. `e.g rustdesk.example.com:21117`
+| Puerto | Protocolo | Servicio | Descripción |
+|--------|-----------|----------|-------------|
+| 21114 | TCP | hbbs | API para usuarios Pro (requiere SSL proxy o puerto 443) |
+| 21115 | TCP | hbbs | Prueba de tipo NAT y consulta de estado - **REQUERIDO** |
+| 21116 | TCP | hbbs | Perforación TCP (hole punching) y servicio de conexión |
+| 21116 | UDP | hbbs | Registro de ID y servicio de latido (heartbeat) - **REQUERIDO** |
+| 21117 | TCP | hbbr | Servicios de retransmisión (Relay) - **REQUERIDO** |
+| 21118 | TCP | hbbs | Cliente web de RustDesk (opcional) |
+| 21119 | TCP | hbbr | Cliente web de RustDesk (opcional) |
 
-##### _This parameter is the IP address (or dns name) of the server running hbbr (usualy this container). The optional `port` parameter has to be used if you use a port different than 21117 for hbbr. `e.g rustdesk.example.com:21117`_
+> **Nota**: Si no necesitas soporte para el cliente web, los puertos 21118 y 21119 pueden desactivarse.
 
-## Changelog & Releases
+## Solución de Problemas
 
-Vous pouvez consulter le changelog [GitHub ici][releases].
+### Las claves no coinciden
+Si recibes un error indicando que las claves proporcionadas y las presentes en la carpeta de configuración no son idénticas, asegúrate de proporcionar solo un conjunto de claves (ya sea a través de la configuración o en archivos).
 
-## Support
+### Falta una clave
+Debes proporcionar AMBAS claves (privada y pública) o ninguna. Si no proporcionas claves, hbbs generará un par automáticamente.
 
-Je ne suis pas dévellopeur, n'ai aucune formation de code, je suis simplement autodidact.
-Si vous avez une question concernant HA et ses add-ons vous pouvez consulter:
+### Par de claves inválido
+Verifica que tus claves sean un par válido de Ed25519. Puedes generarlas usando las herramientas de RustDesk.
 
-- [Le Forum communautaire francophone][hacf] de HomeAssistant
-- [Le Forum communautaire anglophone][forum] de HomeAssistant.
-- [Le serveur Discord][discord-ha] de HomeAssistant.
+## Registro de Cambios y Versiones
 
-## License
+Puedes consultar el registro de cambios en [GitHub aquí][releases].
+
+## Soporte
+
+No soy desarrollador ni tengo formación en programación, soy simplemente autodidacta.
+Si tienes alguna pregunta sobre HA y sus add-ons puedes consultar:
+
+- [El Foro comunitario francófono][hacf] de HomeAssistant
+- [El Foro comunitario anglófono][forum] de HomeAssistant
+- [El servidor Discord][discord-ha] de HomeAssistant
+
+## Licencia
 
 MIT License
 
@@ -101,4 +120,4 @@ SOFTWARE.
 [Frosh]: https://github.com/casse-boubou
 [releases]: https://github.com/casse-boubou/addon-rustdesk-server/releases
 [rustdesk]: https://rustdesk.com/
-[serveur_rustdesk]: https://github.com/rustdesk/rustdesk-server
+[servidor_rustdesk]: https://github.com/rustdesk/rustdesk-server

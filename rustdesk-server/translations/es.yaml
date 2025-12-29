@@ -1,0 +1,27 @@
+---
+configuration:
+  private_key:
+    name: Clave privada
+    description: Parte privada del par de claves.
+  public_key:
+    name: Clave pública
+    description: Parte pública del par de claves.
+  relay:
+    name: ip-servidor-relay
+    description: Dirección IP/nombre DNS de las máquinas que ejecutan hbbr (generalmente este contenedor), separadas por coma.
+network:
+  21114/tcp: >-
+    hbbs - Para usuarios Pro sin proxy SSL, deberás abrir el puerto TCP 21114 para que la API funcione.
+    Alternativamente, usando un proxy SSL abre el puerto TCP 443.
+  21115/tcp: >-
+    hbbs - Se utiliza para la prueba de tipo NAT y consulta de estado en línea.
+    PUERTOS MÍNIMOS REQUERIDOS para que RustDesk funcione.
+  21116/tcp: hbbs - Se utiliza para perforación TCP (hole punching) y servicio de conexión.
+  21116/udp: hbbs - Se utiliza para el registro de ID y servicio de latido (heartbeat).
+  21118/tcp: >-
+    hbbs - Puede abrirse si deseas usar el cliente web de RustDesk.
+    Si no necesitas soporte de cliente web (21118, 21119), los puertos correspondientes pueden desactivarse.
+  21117/tcp: hbbr - Se utiliza para los servicios de retransmisión (Relay). PUERTOS MÍNIMOS REQUERIDOS para que RustDesk funcione.
+  21119/tcp: >-
+    hbbr - Puede abrirse si deseas usar el cliente web de RustDesk.
+    Si no necesitas soporte de cliente web (21118, 21119), los puertos correspondientes pueden desactivarse.
